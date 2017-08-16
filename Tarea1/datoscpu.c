@@ -13,7 +13,7 @@ struct cpu{
 };
 
 
-
+/*Funcion que guarda en un string la linea del archivo cpuinfo que se requiere*/
 void getLinea( FILE * ff, char * valor, char* llave);
 
 /*Imprime los datos del CPU*/
@@ -57,11 +57,12 @@ int main(int argc, char* argv[]){
 }
 
 
+
 void getLinea(FILE * fd, char* valor, char* llave){
 	char buffer[500];
 	char* match = NULL;
 
-
+	/*Lee todo el archivo, busca la linea especifica*/
 	while(!feof(fd)){
 		fgets(buffer, 500, fd);
 		match = strstr(buffer, llave);

@@ -5,7 +5,7 @@
 
 void printHostname(void);
 void printDatosCPU(void);
-void printKernerVersion(void);
+void printKernelVersion(void);
 void printDate(void);
 
 const struct option long_options[] = {
@@ -20,22 +20,24 @@ const char * short_options = "ck";
 
 int main(int argc, char **argv){
 	
-	printHostname();	//IMPRIME NOMBRE DE PC
-	printDate();		//IMPRIME FECHA Y HORA
+	
 
 	char next_option;
+	int c=0;
+	int k=0;
 	do{
 		next_option =getopt_long(argc, argv, short_options, long_options, NULL);
 		
 		switch(next_option){
 			case 'c':		// -c o --cpuinfo
-				printDatosCPU();
+				c=1;
 				break;
 			case 'k':		// -k o --kernel
-				printKernerVersion();
+				k=1;
 				break;
 			case '?':		//Opcion invalida
 				printf("Opcion Invalida\n");
+				abort();
 				break;
 			case -1:		//No hay mas opciones
 				break;
@@ -43,6 +45,11 @@ int main(int argc, char **argv){
 				abort();
 		}
 	}while(next_option !=-1);
+
+	printHostname();	//IMPRIME NOMBRE DE PC
+	printDate();		//IMPRIME FECHA Y HORA
+	if(c) printDatosCPU();
+	if(k) printKernelVersion();
 
 }
 
@@ -58,7 +65,7 @@ void printDatosCPU(void){
 	system("../Tarea1/datoscpu");
 }
 
-void printKernerVersion(void){
+void printKernelVersion(void){
 	FILE * ptr = fopen("/proc/sys/kernel/version", "r");
 	char info[500];
 	//fscanf(ptr, "%[^n]", info);

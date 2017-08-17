@@ -1,3 +1,7 @@
+/*
+Autor: ARMANDO,GASPAR IGNACIO
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -17,14 +21,12 @@ const struct option long_options[] = {
 const char * short_options = "ck";
 
 
-
 int main(int argc, char **argv){
-	
-	
 
 	char next_option;
-	int c=0;
+	int c=0;		//Flags que indican las opciones ingresadas por el usuario
 	int k=0;
+
 	do{
 		next_option =getopt_long(argc, argv, short_options, long_options, NULL);
 		

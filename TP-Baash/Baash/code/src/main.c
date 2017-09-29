@@ -6,10 +6,22 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <string.h>
-#include "../include/prompt.h"
-#include "../include/path.h"
-#include "../include/manipulacion_archivos.h"
-#include "../include/builtin.h"
+
+#include "manipulacion_archivos.c"
+#include "path.c"
+#include "builtin.c"
+
+#define LIGHT_CYAN "\033[1;36m"
+#define COLOR_RESET "\x1b[0m"
+
+
+void hostname(void);
+void directorioActual(void);
+void imprimirTiempoActual(void);
+int whoAmI(void);
+void prompt(void);
+
+
 
 int background(char* argv[]);
 
@@ -143,3 +155,96 @@ int background(char* argv[]){
 }
 
 
+void prompt()
+{
+	imprimirTiempoActual();
+
+	int valorId;
+	valorId = whoAmI();
+
+	hostname();
+
+	directorioActual();
+
+	if(valorId==0)
+		printf("# "COLOR_RESET);
+	else 	printf("$ "COLOR_RESET);
+	return;
+}
+
+//----------------------------------------------------------------
+// Obtiene el nombre del equipo
+
+void hostname(){
+	char nombre[25];
+	FILE *fd;
+
+	fd = fopen("/proc/sys/kernel/hostname","r");
+	fscanf(fd, "%[^\n]s", nombre);
+	printf("%s:", nombre);
+	fclose(fd);
+
+	return;
+}
+
+//----------------------------------------------------------------
+// Obtiene tiempo actual
+void imprimirTiempoActual(){
+	char valor[256];
+	char hora[13];
+
+	getValor("/proc/driver/rtc", valor, "rtc_time");
+	sscanf(valor, "rtc_time : %s", hora);
+	printf(LIGHT_CYAN "[%s]", hora);
+
+	return;
+}
+
+//----------------------------------------------------------------
+/**
+   @brief Obtiene el tipo de usuario
+   @param no aplica
+   @return devuelve 0 para usuario root. !=0 para otro tipo de usuario
+ */
+int whoAmI() {
+
+          struct passwd *pw= NULL;
+          char *user = NULL;
+
+          pw = getpwuid(geteuid());
+          if (pw)
+               user = pw->pw_name;
+          else if ((user = getenv("USER")) == NULL) {
+               fprintf(stderr, "No tengo idea!\n");
+               return 1;
+          }
+          printf("%s@", user);
+          return geteuid();
+}
+
+
+//----------------------------------------------------------------
+// Muestra el directorio actua
+
+void directorioActual()
+{
+	char *current_dir;
+	char cwd[1024];
+	char *home_var = getenv("HOME");
+
+	if (getcwd(cwd, sizeof(cwd)) != NULL){
+		current_dir = cwd;
+
+		if(strncmp(cwd, home_var, strlen(home_var)) == 0) {
+					current_dir = current_dir + strlen(home_var);
+
+					printf("~%s", current_dir);
+				} else {
+
+					printf("%s", current_dir);
+				}
+	}
+	else
+	    perror("getcwd() error: ");
+	return;
+}

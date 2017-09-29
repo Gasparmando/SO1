@@ -1,0 +1,10 @@
+/home/sampaxx/Escritorio/baash stefano/SO1-TP-Baash/TP-Baash/Baash/code/src/main.c: In function ‘whoAmI’:
+/home/sampaxx/Escritorio/baash stefano/SO1-TP-Baash/TP-Baash/Baash/code/src/main.c:214:16: warning: implicit declaration of function ‘getpwuid’ [-Wimplicit-function-declaration]
+           pw = getpwuid(geteuid());
+                ^
+/home/sampaxx/Escritorio/baash stefano/SO1-TP-Baash/TP-Baash/Baash/code/src/main.c:214:14: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
+           pw = getpwuid(geteuid());
+              ^
+/home/sampaxx/Escritorio/baash stefano/SO1-TP-Baash/TP-Baash/Baash/code/src/main.c:216:25: error: dereferencing pointer to incomplete type ‘struct passwd’
+                user = pw->pw_name;
+                         ^
